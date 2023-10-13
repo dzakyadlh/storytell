@@ -1,5 +1,6 @@
 package com.dzakyadlh.storytell.ui.landing
 
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
@@ -10,10 +11,11 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.dzakyadlh.storytell.databinding.ActivityLandingBinding
 import com.dzakyadlh.storytell.ui.login.LoginActivity
+import com.dzakyadlh.storytell.ui.signup.SignupActivity
 
 class LandingActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityLandingBinding
+    private lateinit var binding: ActivityLandingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +41,11 @@ class LandingActivity : AppCompatActivity() {
     }
 
     private fun setupAction(){
-        binding.getStartedButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
+        }
+        binding.signupButton.setOnClickListener {
+            startActivity(Intent(this, SignupActivity::class.java))
         }
     }
 
@@ -50,5 +55,19 @@ class LandingActivity : AppCompatActivity() {
             repeatCount = ObjectAnimator.INFINITE
             repeatMode = ObjectAnimator.REVERSE
         }.start()
+
+        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(500)
+        val signup = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(500)
+        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(500)
+        val desc = ObjectAnimator.ofFloat(binding.descTextView, View.ALPHA, 1f).setDuration(500)
+
+        val together = AnimatorSet().apply {
+            playTogether(login, signup)
+        }
+
+        AnimatorSet().apply {
+            playSequentially(title, desc, together)
+            start()
+        }
     }
 }

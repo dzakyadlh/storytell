@@ -15,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/storytell" />
+        app:srcCompat="@drawable/storytell"
+        android:contentDescription="@string/illustration" />
 
     <TextView
         android:id="@+id/titleTextView"
@@ -28,6 +29,8 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:alpha="0"
+        tools:alpha="100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,17 +45,33 @@
         android:layout_marginEnd="32dp"
         android:text="@string/msg_landing"
         android:textSize="14sp"
+        android:alpha="0"
+        tools:alpha="100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
     <Button
-        android:id="@+id/getStartedButton"
+        android:id="@+id/signupButton"
         android:layout_width="158dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/get_started"
+        android:text="@string/signup"
+        android:alpha="0"
+        tools:alpha="100"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descTextView" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/login"
+        android:alpha="0"
+        tools:alpha="100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
         app:layout_constraintTop_toBottomOf="@+id/descTextView" />
