@@ -41,17 +41,31 @@ class LoginActivity : AppCompatActivity() {
 
         setMyButtonEnable()
 
-        binding.emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
+        with(binding) {
+            emailEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                }
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    setMyButtonEnable()
+                }
 
-            override fun afterTextChanged(s: Editable) {
-            }
-        })
+                override fun afterTextChanged(s: Editable) {
+                }
+            })
+
+            passwordEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    setMyButtonEnable()
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                }
+            })
+        }
     }
 
     private fun setMyButtonEnable() {
@@ -59,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
         val passwordResult = binding.passwordEditText.text
         binding.loginButton.isEnabled =
             emailResult != null && passwordResult != null && emailResult.toString()
-                .isNotEmpty() && passwordResult.toString().isNotEmpty()
+                .isNotEmpty() && passwordResult.toString().isNotEmpty() && passwordResult.length > 7
     }
 
     private fun setupView() {
