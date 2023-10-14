@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.getSession().observe(this) {user->
+        viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
                 startActivity(Intent(this, LandingActivity::class.java))
                 finish()
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupView() {
         @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
             window.setFlags(
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun setupAction(){
+    private fun setupAction() {
         binding.logoutButton.setOnClickListener {
             viewModel.logout()
         }

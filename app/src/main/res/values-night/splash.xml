@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.Storytell.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#201a1b</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/storytell_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/storytell</item>
         <item name="postSplashScreenTheme">@style/Theme.Storytell</item>
     </style>
 </resources>

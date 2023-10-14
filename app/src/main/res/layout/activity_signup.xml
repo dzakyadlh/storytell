@@ -27,7 +27,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="@string/title_signup_page"
-        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         android:alpha="0"
@@ -44,7 +43,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/name"
-        android:textColor="@color/black"
         android:alpha="0"
         tools:alpha="100"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +77,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:text="@string/email"
-        android:textColor="@color/black"
         android:alpha="0"
         tools:alpha="100"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +111,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/password"
-        android:textColor="@color/black"
         android:alpha="0"
         tools:alpha="100"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +131,7 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
         app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.dzakyadlh.storytell.ui.customview.CustomEditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

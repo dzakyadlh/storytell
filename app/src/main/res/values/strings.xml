@@ -16,4 +16,9 @@
     <string name="get_started">Get Started</string>
     <string name="msg_landing">Embark on a journey where every moment in life is a story waiting to be told. Share your stories, big or small, and discover the community of Storytell. Start telling your story today.</string>
     <string name="welcome_landing">Welcome to Storytell</string>
+    <string name="capture">Capture</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="upload">Upload</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
 </resources>
