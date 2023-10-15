@@ -9,13 +9,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.dzakyadlh.storytell.databinding.ActivityMainBinding
-import com.dzakyadlh.storytell.ui.ViewModelFactory
+import com.dzakyadlh.storytell.ui.UserViewModelFactory
 import com.dzakyadlh.storytell.ui.landing.LandingActivity
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory.getInstance(this)
+        UserViewModelFactory.getInstance(this)
     }
 
     private lateinit var binding: ActivityMainBinding

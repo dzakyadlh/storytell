@@ -14,14 +14,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.dzakyadlh.storytell.data.pref.UserModel
 import com.dzakyadlh.storytell.databinding.ActivityLoginBinding
-import com.dzakyadlh.storytell.ui.ViewModelFactory
+import com.dzakyadlh.storytell.ui.UserViewModelFactory
 import com.dzakyadlh.storytell.ui.customview.CustomButton
 import com.dzakyadlh.storytell.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<LoginViewModel> {
-        ViewModelFactory.getInstance(this)
+        UserViewModelFactory.getInstance(this)
     }
 
     private lateinit var binding: ActivityLoginBinding

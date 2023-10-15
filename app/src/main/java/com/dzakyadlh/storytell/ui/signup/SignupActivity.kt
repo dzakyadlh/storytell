@@ -2,6 +2,7 @@ package com.dzakyadlh.storytell.ui.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -9,13 +10,23 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.dzakyadlh.storytell.data.Result
+import com.dzakyadlh.storytell.data.response.RegisterResponse
 import com.dzakyadlh.storytell.databinding.ActivitySignupBinding
+import com.dzakyadlh.storytell.ui.UserViewModelFactory
+import com.dzakyadlh.storytell.ui.login.LoginActivity
+import androidx.lifecycle.observe
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
+
+    private val viewModel by viewModels<SignupViewModel> {
+        UserViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,18 +118,39 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun setupAction() {
-        binding.signupButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
+        with(binding) {
+            val name = nameEditText.text.toString()
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
 
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeay!")
-                setMessage("Your account has been successfully registered! Now let's login to your account and tell your first story!")
-                setPositiveButton("Login") { _, _ ->
-                    finish()
+            viewModel.register(name, email, password)
+                .observe(this@SignupActivity) { result: Result<RegisterResponse> ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                showLoading(true)
+                            }
+
+                            is Result.Success -> {
+//                            result.data.message?.let { showToast(it) }
+                                showToast(result.data.message.toString())
+                                showLoading(false)
+                                startActivity(
+                                    Intent(
+                                        this@SignupActivity,
+                                        LoginActivity::class.java
+                                    )
+                                )
+                                finish()
+                            }
+
+                            is Result.Error -> {
+                                showToast(result.error)
+                                showLoading(false)
+                            }
+                        }
+                    }
                 }
-                create()
-                show()
-            }
         }
     }
 
@@ -161,5 +193,13 @@ class SignupActivity : AppCompatActivity() {
             )
             start()
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

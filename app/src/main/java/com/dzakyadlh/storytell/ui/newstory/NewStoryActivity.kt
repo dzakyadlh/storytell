@@ -4,19 +4,30 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.dzakyadlh.storytell.R
+import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.databinding.ActivityNewStoryBinding
+import com.dzakyadlh.storytell.ui.StoryViewModelFactory
 import com.dzakyadlh.storytell.utils.getImageUri
+import com.dzakyadlh.storytell.utils.reduceFileImage
+import com.dzakyadlh.storytell.utils.uriToFile
 
 class NewStoryActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityNewStoryBinding
+    private lateinit var binding: ActivityNewStoryBinding
 
     private var currentImageUri: Uri? = null
+
+    private val viewModel by viewModels<NewStoryViewModel> {
+        StoryViewModelFactory.getInstance()
+    }
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -55,7 +66,7 @@ class NewStoryActivity : AppCompatActivity() {
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
-    ) {uri:Uri? ->
+    ) { uri: Uri? ->
         if (uri != null) {
             currentImageUri = uri
             showImage()
@@ -71,7 +82,7 @@ class NewStoryActivity : AppCompatActivity() {
 
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.TakePicture()
-    ) {isSuccess ->
+    ) { isSuccess ->
         if (isSuccess) {
             showImage()
         }
@@ -85,10 +96,58 @@ class NewStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadImage() {
-        Toast.makeText(this, "Feature not yet supported", Toast.LENGTH_LONG).show()
+        currentImageUri?.let { uri ->
+            val imageFile = uriToFile(uri, this).reduceFileImage()
+            Log.d("Image File", "showImage: ${imageFile.path}")
+            val description = "Picture description"
+//            showLoading(true)
+//
+//            val requestBody = description.toRequestBody("text/plain".toMediaType())
+//            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+//            val multipartBody = MultipartBody.Part.createFormData("photo", imageFile.name, requestImageFile)
+//
+//            lifecycleScope.launch {
+//                try {
+//                    val apiService = APIConfig.getApiService()
+//                    val successResponse = apiService.newStory(multipartBody, requestBody)
+//                    showToast(successResponse.message.toString())
+//                    showLoading(false)
+//                } catch (e: retrofit2.HttpException) {
+//                    val errorBody = e.response()?.errorBody()?.string()
+//                    val errorResponse = Gson().fromJson(errorBody, NewStoryResponse::class.java)
+//                    showToast(errorResponse.message.toString())
+//                    showLoading(false)
+//                }
+//            }
+            viewModel.newStory(imageFile, description).observe(this) {result->
+                if (result != null) {
+                    when(result) {
+                        is Result.Loading -> {
+                            showLoading(true)
+                        }
+                        is Result.Success -> {
+                            result.data.message?.let { showToast(it) }
+                            showLoading(false)
+                        }
+                        is Result.Error -> {
+                            showToast(result.error)
+                            showLoading(false)
+                        }
+                    }
+                }
+            }
+        } ?: showToast(getString(R.string.empty_image_warning))
     }
 
-    companion object{
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
         private const val REQUIRED_PERMISSION = android.Manifest.permission.CAMERA
     }
 }
