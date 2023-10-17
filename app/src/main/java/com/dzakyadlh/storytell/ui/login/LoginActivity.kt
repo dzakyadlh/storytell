@@ -10,33 +10,31 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.data.pref.UserModel
 import com.dzakyadlh.storytell.databinding.ActivityLoginBinding
 import com.dzakyadlh.storytell.ui.UserViewModelFactory
-import com.dzakyadlh.storytell.ui.customview.CustomButton
-import com.dzakyadlh.storytell.ui.main.MainActivity
+import com.dzakyadlh.storytell.ui.home.HomeActivity
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityLoginBinding
 
     private val viewModel by viewModels<LoginViewModel> {
         UserViewModelFactory.getInstance(this)
     }
 
-    private lateinit var binding: ActivityLoginBinding
-
-    private lateinit var customButton: CustomButton
+    private var userModel: UserModel = UserModel("", "", false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        customButton = binding.loginButton
-
         setupView()
-        setupAction()
         playAnimation()
 
         setMyButtonEnable()
@@ -75,6 +73,10 @@ class LoginActivity : AppCompatActivity() {
                 override fun afterTextChanged(s: Editable) {
                 }
             })
+
+            loginButton.setOnClickListener {
+                setupAction()
+            }
         }
     }
 
@@ -100,13 +102,36 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupAction() {
-        binding.loginButton.setOnClickListener {
+        userModel.let { user ->
             val email = binding.emailEditText.text.toString()
-            viewModel.saveSession(UserModel(email, "sample_token"))
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
+            val password = binding.passwordEditText.text.toString()
+            viewModel.login(email, password).observe(this@LoginActivity) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            showLoading(true)
+                        }
+
+                        is Result.Success -> {
+                            user.email = email
+                            user.token = result.data.loginResult?.token.toString()
+                            viewModel.saveSession(user)
+                            showToast(result.data.message.toString())
+                            showLoading(false)
+                            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+
+                        is Result.Error -> {
+                            showToast(result.error)
+                            showLoading(false)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -117,16 +142,16 @@ class LoginActivity : AppCompatActivity() {
             repeatMode = ObjectAnimator.REVERSE
         }.start()
 
-        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(500)
-        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(500)
+        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(300)
+        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(300)
         val emailText =
-            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(300)
         val emailEditText =
-            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(300)
         val passwordText =
-            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(300)
         val passwordEditText =
-            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(300)
 
         val together = AnimatorSet().apply {
             playTogether(login)
@@ -143,5 +168,13 @@ class LoginActivity : AppCompatActivity() {
             )
             start()
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

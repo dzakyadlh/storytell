@@ -1,6 +1,5 @@
 package com.dzakyadlh.storytell.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.data.pref.UserModel
@@ -29,11 +28,11 @@ class UserRepository private constructor(
         userPreference.logout()
     }
 
-    suspend fun register(
+    fun register(
         name: String,
         email: String,
         password: String
-    ): LiveData<Result<RegisterResponse>> = liveData {
+    ) = liveData {
         emit(Result.Loading)
         try {
             val successResponse = apiService.register(name, email, password)
@@ -45,7 +44,7 @@ class UserRepository private constructor(
         }
     }
 
-    suspend fun login(email: String, password: String): LiveData<Result<LoginResponse>> = liveData {
+    fun login(email: String, password: String) = liveData {
         emit(Result.Loading)
         try {
             val successResponse = apiService.login(email, password)

@@ -14,11 +14,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.dzakyadlh.storytell.data.Result
-import com.dzakyadlh.storytell.data.response.RegisterResponse
 import com.dzakyadlh.storytell.databinding.ActivitySignupBinding
 import com.dzakyadlh.storytell.ui.UserViewModelFactory
 import com.dzakyadlh.storytell.ui.login.LoginActivity
-import androidx.lifecycle.observe
 
 class SignupActivity : AppCompatActivity() {
 
@@ -34,7 +32,6 @@ class SignupActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupView()
-        setupAction()
         playAnimation()
 
         setMyButtonEnable()
@@ -91,6 +88,10 @@ class SignupActivity : AppCompatActivity() {
                 override fun afterTextChanged(s: Editable) {
                 }
             })
+
+            signupButton.setOnClickListener {
+                setupAction()
+            }
         }
     }
 
@@ -118,40 +119,34 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun setupAction() {
-        with(binding) {
-            val name = nameEditText.text.toString()
-            val email = emailEditText.text.toString()
-            val password = passwordEditText.text.toString()
+        val name = binding.nameEditText.text.toString()
+        val email = binding.emailEditText.text.toString()
+        val password = binding.passwordEditText.text.toString()
 
-            viewModel.register(name, email, password)
-                .observe(this@SignupActivity) { result: Result<RegisterResponse> ->
-                    if (result != null) {
-                        when (result) {
-                            is Result.Loading -> {
-                                showLoading(true)
-                            }
+        viewModel.register(name, email, password)
+            .observe(this@SignupActivity) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            showLoading(true)
+                        }
 
-                            is Result.Success -> {
-//                            result.data.message?.let { showToast(it) }
-                                showToast(result.data.message.toString())
-                                showLoading(false)
-                                startActivity(
-                                    Intent(
-                                        this@SignupActivity,
-                                        LoginActivity::class.java
-                                    )
-                                )
-                                finish()
-                            }
+                        is Result.Success -> {
+                            showToast(result.data.message.toString())
+                            showLoading(false)
+                            val intent = Intent(this@SignupActivity, LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
 
-                            is Result.Error -> {
-                                showToast(result.error)
-                                showLoading(false)
-                            }
+                        is Result.Error -> {
+                            showToast(result.error)
+                            showLoading(false)
                         }
                     }
                 }
-        }
+            }
     }
 
     private fun playAnimation() {
@@ -161,20 +156,20 @@ class SignupActivity : AppCompatActivity() {
             repeatMode = ObjectAnimator.REVERSE
         }.start()
 
-        val signup = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(500)
-        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(500)
+        val signup = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(300)
+        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(300)
         val usernameText =
-            ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(300)
         val usernameEditText =
-            ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(300)
         val emailText =
-            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(300)
         val emailEditText =
-            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(300)
         val passwordText =
-            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(300)
         val passwordEditText =
-            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(300)
 
         val together = AnimatorSet().apply {
             playTogether(signup)

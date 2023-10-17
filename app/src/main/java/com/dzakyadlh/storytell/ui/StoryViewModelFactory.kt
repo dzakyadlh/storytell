@@ -1,5 +1,6 @@
 package com.dzakyadlh.storytell.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dzakyadlh.storytell.data.repository.StoryRepository
@@ -22,9 +23,9 @@ class StoryViewModelFactory(private val repository: StoryRepository):ViewModelPr
         private var instance: StoryViewModelFactory? = null
 
         @JvmStatic
-        fun getInstance() =
+        fun getInstance(context: Context) =
             instance ?: synchronized(this) {
-                instance ?: StoryViewModelFactory(Injection.provideStoryRepository())
+                instance ?: StoryViewModelFactory(Injection.provideStoryRepository(context))
             }.also { instance = it }
     }
 }

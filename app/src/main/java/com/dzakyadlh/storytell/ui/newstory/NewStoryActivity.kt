@@ -26,7 +26,7 @@ class NewStoryActivity : AppCompatActivity() {
     private var currentImageUri: Uri? = null
 
     private val viewModel by viewModels<NewStoryViewModel> {
-        StoryViewModelFactory.getInstance()
+        StoryViewModelFactory.getInstance(this)
     }
 
     private val requestPermissionLauncher =
@@ -100,25 +100,6 @@ class NewStoryActivity : AppCompatActivity() {
             val imageFile = uriToFile(uri, this).reduceFileImage()
             Log.d("Image File", "showImage: ${imageFile.path}")
             val description = "Picture description"
-//            showLoading(true)
-//
-//            val requestBody = description.toRequestBody("text/plain".toMediaType())
-//            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-//            val multipartBody = MultipartBody.Part.createFormData("photo", imageFile.name, requestImageFile)
-//
-//            lifecycleScope.launch {
-//                try {
-//                    val apiService = APIConfig.getApiService()
-//                    val successResponse = apiService.newStory(multipartBody, requestBody)
-//                    showToast(successResponse.message.toString())
-//                    showLoading(false)
-//                } catch (e: retrofit2.HttpException) {
-//                    val errorBody = e.response()?.errorBody()?.string()
-//                    val errorResponse = Gson().fromJson(errorBody, NewStoryResponse::class.java)
-//                    showToast(errorResponse.message.toString())
-//                    showLoading(false)
-//                }
-//            }
             viewModel.newStory(imageFile, description).observe(this) {result->
                 if (result != null) {
                     when(result) {

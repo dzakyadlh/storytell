@@ -34,6 +34,10 @@ class StoryRepository private constructor(
         }
     }
 
+//    fun getAllStory():LiveData<Result<List<StoryEntity>>>{
+//
+//    }
+
     companion object {
         @Volatile
         private var instance: StoryRepository? = null

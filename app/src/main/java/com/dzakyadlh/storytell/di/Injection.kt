@@ -6,16 +6,21 @@ import com.dzakyadlh.storytell.data.pref.dataStore
 import com.dzakyadlh.storytell.data.repository.StoryRepository
 import com.dzakyadlh.storytell.data.repository.UserRepository
 import com.dzakyadlh.storytell.data.retrofit.APIConfig
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 object Injection {
     fun provideUserRepository(context: Context): UserRepository {
         val pref = UserPreference.getInstance(context.dataStore)
-        val apiService = APIConfig.getApiService()
+        val user = runBlocking { pref.getSession().first() }
+        val apiService = APIConfig.getApiService(user.token)
         return UserRepository.getInstance(pref, apiService)
     }
 
-    fun provideStoryRepository(): StoryRepository {
-        val apiService = APIConfig.getApiService()
+    fun provideStoryRepository(context: Context): StoryRepository {
+        val pref = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { pref.getSession().first() }
+        val apiService = APIConfig.getApiService(user.token)
         return StoryRepository.getInstance(apiService)
     }
 }
