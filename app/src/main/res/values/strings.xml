@@ -10,7 +10,7 @@
     <string name="name">Name</string>
     <string name="message_main_page">Selamat Belajar di Dicoding.</string>
     <string name="greeting">Halo %1$s,</string>
-    <string name="logout">Keluar</string>
+    <string name="logout">Logout</string>
     <string name="illustration">Illustration</string>
     <string name="log_in">Log In</string>
     <string name="get_started">Get Started</string>

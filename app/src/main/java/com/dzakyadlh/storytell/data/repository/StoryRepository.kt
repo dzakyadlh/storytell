@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.data.response.GetAllStoryResponse
+import com.dzakyadlh.storytell.data.response.GetDetailStoryResponse
 import com.dzakyadlh.storytell.data.response.ListStoryItem
 import com.dzakyadlh.storytell.data.response.NewStoryResponse
+import com.dzakyadlh.storytell.data.response.Story
 import com.dzakyadlh.storytell.data.retrofit.APIService
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
@@ -37,14 +39,26 @@ class StoryRepository private constructor(
         }
     }
 
-    fun getAllStory():LiveData<Result<List<ListStoryItem>>> = liveData{
+    fun getAllStory(): LiveData<Result<List<ListStoryItem>>> = liveData {
         emit(Result.Loading)
         try {
             val successResponse = apiService.getAllStory()
             emit(Result.Success(successResponse.listStory))
-        }catch (e:HttpException){
+        } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, GetAllStoryResponse::class.java)
+            emit(Result.Error(errorResponse.message.toString()))
+        }
+    }
+
+    fun getDetailStory(id: String): LiveData<Result<Story>> = liveData {
+        emit(Result.Loading)
+        try {
+            val successResponse = apiService.getDetailStory(id)
+            emit(Result.Success(successResponse.story))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, GetDetailStoryResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }

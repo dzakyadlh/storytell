@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.dzakyadlh.storytell.databinding.ActivityMainBinding
 import com.dzakyadlh.storytell.ui.UserViewModelFactory
+import com.dzakyadlh.storytell.ui.home.HomeActivity
 import com.dzakyadlh.storytell.ui.landing.LandingActivity
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
                 startActivity(Intent(this, LandingActivity::class.java))
+                finish()
+            } else {
+                startActivity(Intent(this, HomeActivity::class.java))
                 finish()
             }
         }

@@ -30,6 +30,16 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
     </style>
 
+    <style name="AppBarTheme">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textColorPrimary">@color/md_theme_light_onPrimary</item>
+    </style>
+
+    <style name="AppBarTheme.Popup">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+
     <style name="smallText">
         <item name="android:fontFamily">@font/poppins</item>
         <item name="android:textSize">12sp</item>
