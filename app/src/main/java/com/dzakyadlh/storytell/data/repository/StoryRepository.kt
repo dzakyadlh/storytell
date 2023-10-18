@@ -1,7 +1,10 @@
 package com.dzakyadlh.storytell.data.repository
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.dzakyadlh.storytell.data.Result
+import com.dzakyadlh.storytell.data.response.GetAllStoryResponse
+import com.dzakyadlh.storytell.data.response.ListStoryItem
 import com.dzakyadlh.storytell.data.response.NewStoryResponse
 import com.dzakyadlh.storytell.data.retrofit.APIService
 import com.google.gson.Gson
@@ -34,9 +37,17 @@ class StoryRepository private constructor(
         }
     }
 
-//    fun getAllStory():LiveData<Result<List<StoryEntity>>>{
-//
-//    }
+    fun getAllStory():LiveData<Result<List<ListStoryItem>>> = liveData{
+        emit(Result.Loading)
+        try {
+            val successResponse = apiService.getAllStory()
+            emit(Result.Success(successResponse.listStory))
+        }catch (e:HttpException){
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, GetAllStoryResponse::class.java)
+            emit(Result.Error(errorResponse.message.toString()))
+        }
+    }
 
     companion object {
         @Volatile

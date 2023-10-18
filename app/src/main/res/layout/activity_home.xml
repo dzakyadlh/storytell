@@ -4,13 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="60dp"
     tools:context=".ui.home.HomeActivity">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="60dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/storyList"
@@ -36,7 +31,5 @@
             app:layout_constraintStart_toStartOf="@+id/storyList"
             app:layout_constraintTop_toTopOf="@+id/storyList"
             tools:visibility="visible" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
