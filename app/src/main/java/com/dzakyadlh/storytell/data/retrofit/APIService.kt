@@ -10,11 +10,10 @@ import okhttp3.RequestBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface APIService {
 
@@ -43,8 +42,8 @@ interface APIService {
     @GET("stories")
     suspend fun getAllStory(): GetAllStoryResponse
 
-    @GET("stories")
+    @GET("stories/{id}")
     suspend fun getDetailStory(
-        @Query("id") id: String
+        @Path("id") id: String
     ): GetDetailStoryResponse
 }

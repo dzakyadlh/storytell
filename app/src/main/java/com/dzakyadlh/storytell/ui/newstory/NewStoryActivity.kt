@@ -1,5 +1,8 @@
 package com.dzakyadlh.storytell.ui.newstory
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +18,7 @@ import com.dzakyadlh.storytell.R
 import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.databinding.ActivityNewStoryBinding
 import com.dzakyadlh.storytell.ui.StoryViewModelFactory
+import com.dzakyadlh.storytell.ui.home.HomeActivity
 import com.dzakyadlh.storytell.utils.getImageUri
 import com.dzakyadlh.storytell.utils.reduceFileImage
 import com.dzakyadlh.storytell.utils.uriToFile
@@ -55,9 +59,12 @@ class NewStoryActivity : AppCompatActivity() {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
 
+        playAnimation()
+
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
         binding.uploadButton.setOnClickListener { uploadImage() }
+
     }
 
     private fun startGallery() {
@@ -99,17 +106,22 @@ class NewStoryActivity : AppCompatActivity() {
         currentImageUri?.let { uri ->
             val imageFile = uriToFile(uri, this).reduceFileImage()
             Log.d("Image File", "showImage: ${imageFile.path}")
-            val description = "Picture description"
-            viewModel.newStory(imageFile, description).observe(this) {result->
+            val description = binding.descEditText.text.toString()
+            viewModel.newStory(imageFile, description).observe(this) { result ->
                 if (result != null) {
-                    when(result) {
+                    when (result) {
                         is Result.Loading -> {
                             showLoading(true)
                         }
+
                         is Result.Success -> {
                             result.data.message?.let { showToast(it) }
                             showLoading(false)
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         }
+
                         is Result.Error -> {
                             showToast(result.error)
                             showLoading(false)
@@ -118,6 +130,26 @@ class NewStoryActivity : AppCompatActivity() {
                 }
             }
         } ?: showToast(getString(R.string.empty_image_warning))
+    }
+
+    private fun playAnimation() {
+        val previewImg =
+            ObjectAnimator.ofFloat(binding.previewImageView, View.ALPHA, 1f).setDuration(300)
+        val descEditText =
+            ObjectAnimator.ofFloat(binding.descEditTextLayout, View.ALPHA, 1f).setDuration(300)
+        val galleryButton =
+            ObjectAnimator.ofFloat(binding.galleryButton, View.ALPHA, 1f).setDuration(300)
+        val cameraButton =
+            ObjectAnimator.ofFloat(binding.cameraButton, View.ALPHA, 1f).setDuration(300)
+        val uploadButton =
+            ObjectAnimator.ofFloat(binding.uploadButton, View.ALPHA, 1f).setDuration(300)
+
+        AnimatorSet().apply {
+            playSequentially(
+                previewImg, descEditText, galleryButton, cameraButton, uploadButton
+            )
+            start()
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

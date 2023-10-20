@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.databinding.ActivityDetailBinding
 import com.dzakyadlh.storytell.ui.StoryViewModelFactory
+import com.dzakyadlh.storytell.utils.DateFormatter
 
 class DetailActivity : AppCompatActivity() {
 
@@ -50,8 +51,8 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun setupAction(id:String) {
-        with(binding){
+    private fun setupAction(id: String) {
+        with(binding) {
             viewModel.getDetailStory(id).observe(this@DetailActivity) { result ->
                 if (result != null) {
                     when (result) {
@@ -60,10 +61,13 @@ class DetailActivity : AppCompatActivity() {
                         }
 
                         is Result.Success -> {
-                            Glide.with(this@DetailActivity).load(result.data.photoUrl.toString()).into(storyImg)
-                            storyName.text = result.data.name.toString()
-                            storyDesc.text = result.data.description.toString()
-                            storyDate.text = result.data.createdAt.toString()
+                            val story = result.data
+                            Glide.with(this@DetailActivity).load(result.data.photoUrl)
+                                .into(storyImg)
+                            storyName.text = result.data.name
+                            storyDesc.text = result.data.description
+                            storyDate.text =
+                                DateFormatter.formatDate(result.data.createdAt.toString())
                             showLoading(false)
                         }
 

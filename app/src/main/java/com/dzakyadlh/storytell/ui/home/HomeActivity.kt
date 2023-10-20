@@ -19,6 +19,7 @@ import com.dzakyadlh.storytell.ui.StoryViewModelFactory
 import com.dzakyadlh.storytell.ui.UserViewModelFactory
 import com.dzakyadlh.storytell.ui.landing.LandingActivity
 import com.dzakyadlh.storytell.ui.main.MainViewModel
+import com.dzakyadlh.storytell.ui.newstory.NewStoryActivity
 
 class HomeActivity : AppCompatActivity() {
 
@@ -57,6 +58,10 @@ class HomeActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+
+        binding.addStoryButton.setOnClickListener {
+            startActivity(Intent(this, NewStoryActivity::class.java))
         }
     }
 
