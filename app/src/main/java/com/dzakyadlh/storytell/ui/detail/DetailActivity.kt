@@ -1,7 +1,5 @@
 package com.dzakyadlh.storytell.ui.detail
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Intent.EXTRA_TEXT
 import android.os.Build
 import android.os.Bundle
@@ -34,7 +32,6 @@ class DetailActivity : AppCompatActivity() {
 
         setupView()
         setupAction(storyId)
-        playAnimation()
 
     }
 
@@ -61,7 +58,6 @@ class DetailActivity : AppCompatActivity() {
                         }
 
                         is Result.Success -> {
-                            val story = result.data
                             Glide.with(this@DetailActivity).load(result.data.photoUrl)
                                 .into(storyImg)
                             storyName.text = result.data.name
@@ -78,24 +74,6 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-    }
-
-    private fun playAnimation() {
-        val storyImg = ObjectAnimator.ofFloat(binding.storyImg, View.ALPHA, 1f).setDuration(300)
-        val storyName = ObjectAnimator.ofFloat(binding.storyName, View.ALPHA, 1f).setDuration(300)
-        val storyDesc = ObjectAnimator.ofFloat(binding.storyDesc, View.ALPHA, 1f).setDuration(300)
-        val storyDate = ObjectAnimator.ofFloat(binding.storyDate, View.ALPHA, 1f).setDuration(300)
-
-
-        AnimatorSet().apply {
-            playSequentially(
-                storyImg,
-                storyName,
-                storyDesc,
-                storyDate,
-            )
-            start()
         }
     }
 

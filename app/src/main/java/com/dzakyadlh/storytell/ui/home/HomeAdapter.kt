@@ -1,9 +1,12 @@
 package com.dzakyadlh.storytell.ui.home
 
+import android.app.Activity
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +41,13 @@ class HomeAdapter : ListAdapter<ListStoryItem, HomeAdapter.HomeViewHolder>(DIFF_
                 itemView.setOnClickListener {
                     val intent = Intent(itemView.context, DetailActivity::class.java)
                     intent.putExtra(EXTRA_TEXT, result.id)
-                    itemView.context.startActivity(intent)
+                    val optionsCompat: ActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        itemView.context as Activity,
+                        Pair(storyImg, "story_img"),
+                        Pair(storyName, "story_name"),
+                        Pair(storyDesc, "story_desc")
+                    )
+                    itemView.context.startActivity(intent, optionsCompat.toBundle())
                 }
             }
         }

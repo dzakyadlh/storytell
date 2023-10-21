@@ -115,7 +115,7 @@ class NewStoryActivity : AppCompatActivity() {
                         }
 
                         is Result.Success -> {
-                            result.data.message?.let { showToast(it) }
+                            showToast("Story created!")
                             showLoading(false)
                             val intent = Intent(this, HomeActivity::class.java)
                             startActivity(intent)

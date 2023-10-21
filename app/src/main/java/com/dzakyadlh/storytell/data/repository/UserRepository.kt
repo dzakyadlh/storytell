@@ -4,8 +4,7 @@ import androidx.lifecycle.liveData
 import com.dzakyadlh.storytell.data.Result
 import com.dzakyadlh.storytell.data.pref.UserModel
 import com.dzakyadlh.storytell.data.pref.UserPreference
-import com.dzakyadlh.storytell.data.response.LoginResponse
-import com.dzakyadlh.storytell.data.response.RegisterResponse
+import com.dzakyadlh.storytell.data.response.ErrorResponse
 import com.dzakyadlh.storytell.data.retrofit.APIService
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +38,7 @@ class UserRepository private constructor(
             emit(Result.Success(successResponse))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }
@@ -50,8 +49,8 @@ class UserRepository private constructor(
             val successResponse = apiService.login(email, password)
             emit(Result.Success(successResponse))
         } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.toString()
-            val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }

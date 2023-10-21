@@ -24,4 +24,8 @@
     <string name="empty_image_warning">Please insert a picture first</string>
     <string name="story_image">Story Image</string>
     <string name="add_story">Add story</string>
+    <string name="write_your_story_here">Write your story here...</string>
+    <string name="image_preview">image preview</string>
+    <string name="email_example">example@email.com</string>
+    <string name="example">example</string>
 </resources>

@@ -116,7 +116,8 @@ class LoginActivity : AppCompatActivity() {
                             user.email = email
                             user.token = result.data.loginResult?.token.toString()
                             viewModel.saveSession(user)
-                            showToast(result.data.message.toString())
+                            showToast("Login Successful")
+                            showToast("Welcome, ${result.data.loginResult?.name.toString()}")
                             showLoading(false)
                             val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                             intent.flags =

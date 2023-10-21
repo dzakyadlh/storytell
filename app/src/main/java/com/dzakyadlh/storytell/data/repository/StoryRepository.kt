@@ -3,10 +3,8 @@ package com.dzakyadlh.storytell.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.dzakyadlh.storytell.data.Result
-import com.dzakyadlh.storytell.data.response.GetAllStoryResponse
-import com.dzakyadlh.storytell.data.response.GetDetailStoryResponse
+import com.dzakyadlh.storytell.data.response.ErrorResponse
 import com.dzakyadlh.storytell.data.response.ListStoryItem
-import com.dzakyadlh.storytell.data.response.NewStoryResponse
 import com.dzakyadlh.storytell.data.response.Story
 import com.dzakyadlh.storytell.data.retrofit.APIService
 import com.google.gson.Gson
@@ -34,7 +32,7 @@ class StoryRepository private constructor(
             emit(Result.Success(successResponse))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, NewStoryResponse::class.java)
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }
@@ -46,7 +44,7 @@ class StoryRepository private constructor(
             emit(Result.Success(successResponse.listStory))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, GetAllStoryResponse::class.java)
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }
@@ -58,7 +56,7 @@ class StoryRepository private constructor(
             emit(Result.Success(successResponse.story))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, GetDetailStoryResponse::class.java)
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }

@@ -6,12 +6,12 @@ import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 
-class CustomEditText : AppCompatEditText, View.OnTouchListener {
-
+class EmailEditText:AppCompatEditText, View.OnTouchListener {
     private lateinit var clearButtonImage: Drawable
 
     constructor(context: Context) : super(context) {
@@ -42,11 +42,12 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().length < 8) {
-                    setError("Password can't be less than 8 characters!", null)
+                if (!isValidEmail(s.toString())) {
+                    setError("Invalid email format", null)
                 } else {
                     error = null
                 }
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -58,5 +59,8 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         return false
     }
-}
 
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+}

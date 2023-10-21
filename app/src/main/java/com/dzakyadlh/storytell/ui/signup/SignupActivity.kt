@@ -132,7 +132,7 @@ class SignupActivity : AppCompatActivity() {
                         }
 
                         is Result.Success -> {
-                            showToast(result.data.message.toString())
+                            showToast("User created. Please login to your account.")
                             showLoading(false)
                             val intent = Intent(this@SignupActivity, LoginActivity::class.java)
                             intent.flags =
