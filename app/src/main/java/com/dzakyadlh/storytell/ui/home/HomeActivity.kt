@@ -7,18 +7,16 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dzakyadlh.storytell.R
-import com.dzakyadlh.storytell.data.Result
-import com.dzakyadlh.storytell.data.response.ListStoryItem
 import com.dzakyadlh.storytell.databinding.ActivityHomeBinding
 import com.dzakyadlh.storytell.ui.StoryViewModelFactory
 import com.dzakyadlh.storytell.ui.UserViewModelFactory
 import com.dzakyadlh.storytell.ui.landing.LandingActivity
 import com.dzakyadlh.storytell.ui.main.MainViewModel
+import com.dzakyadlh.storytell.ui.maps.MapsActivity
 import com.dzakyadlh.storytell.ui.newstory.NewStoryActivity
 
 class HomeActivity : AppCompatActivity() {
@@ -43,11 +41,17 @@ class HomeActivity : AppCompatActivity() {
         binding.storyList.layoutManager = layoutManager
 
         setupView()
-        setupAction()
+        setListStory()
         playAnimation()
 
         binding.appBarLayout.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.maps -> {
+                    val intent = Intent(this, MapsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+
                 R.id.logout -> {
                     userViewModel.logout()
                     val intent = Intent(this, LandingActivity::class.java)
@@ -78,44 +82,20 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun setupAction() {
-        viewModel.getAllStory().observe(this@HomeActivity) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        showLoading(true)
-                    }
-
-                    is Result.Success -> {
-                        setListStory(result.data)
-                        showLoading(false)
-                    }
-
-                    is Result.Error -> {
-                        showToast(result.error)
-                        showLoading(false)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setListStory(storyResponse: List<ListStoryItem>) {
+    private fun setListStory() {
         val adapter = HomeAdapter()
-        adapter.submitList(storyResponse)
-        binding.storyList.adapter = adapter
+        binding.storyList.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        viewModel.getAllStory.observe(this) {
+            adapter.submitData(lifecycle, it)
+        }
     }
 
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.storyList, View.ALPHA, 1f).setDuration(300).start()
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
 }

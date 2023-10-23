@@ -2,7 +2,12 @@ package com.dzakyadlh.storytell.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.dzakyadlh.storytell.data.Result
+import com.dzakyadlh.storytell.data.paging.StoryPagingSource
 import com.dzakyadlh.storytell.data.response.ErrorResponse
 import com.dzakyadlh.storytell.data.response.ListStoryItem
 import com.dzakyadlh.storytell.data.response.Story
@@ -37,16 +42,27 @@ class StoryRepository private constructor(
         }
     }
 
-    fun getAllStory(): LiveData<Result<List<ListStoryItem>>> = liveData {
-        emit(Result.Loading)
-        try {
-            val successResponse = apiService.getAllStory()
-            emit(Result.Success(successResponse.listStory))
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-            emit(Result.Error(errorResponse.message.toString()))
-        }
+//    fun getAllStory(): LiveData<Result<List<ListStoryItem>>> = liveData {
+//        emit(Result.Loading)
+//        try {
+//            val successResponse = apiService.getAllStory()
+//            emit(Result.Success(successResponse.listStory))
+//        } catch (e: HttpException) {
+//            val errorBody = e.response()?.errorBody()?.string()
+//            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+//            emit(Result.Error(errorResponse.message.toString()))
+//        }
+//    }
+
+    fun getAllStory(): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config =  PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(apiService)
+            }
+        ).liveData
     }
 
     fun getDetailStory(id: String): LiveData<Result<Story>> = liveData {
@@ -54,6 +70,18 @@ class StoryRepository private constructor(
         try {
             val successResponse = apiService.getDetailStory(id)
             emit(Result.Success(successResponse.story))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(errorResponse.message.toString()))
+        }
+    }
+
+    fun getLocationStory(): LiveData<Result<List<ListStoryItem>>> = liveData {
+        emit(Result.Loading)
+        try {
+            val successResponse = apiService.getStoryWithLocation()
+            emit(Result.Success(successResponse.listStory))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)

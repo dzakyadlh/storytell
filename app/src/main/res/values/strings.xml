@@ -28,4 +28,7 @@
     <string name="image_preview">image preview</string>
     <string name="email_example">example@email.com</string>
     <string name="example">example</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps">Maps</string>
+    <string name="retry">Retry</string>
 </resources>
