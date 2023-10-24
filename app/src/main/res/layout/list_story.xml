@@ -8,7 +8,7 @@
     android:paddingVertical="8dp">
 
     <com.google.android.material.card.MaterialCardView
-        style="?attr/materialCardViewElevatedStyle"
+        style="?attr/materialCardViewOutlinedStyle"
         android:id="@+id/story_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

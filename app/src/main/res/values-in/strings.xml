@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk Akun</string>
+    <string name="name">Nama</string>
+    <string name="logout">Keluar Akun</string>
+    <string name="illustration">Ilustrasi</string>
+    <string name="log_in">Masuk Akun</string>
+    <string name="msg_landing">Mulailah perjalanan di mana setiap momen dalam hidup adalah sebuah cerita yang menunggu untuk diceritakan. Bagikan cerita Anda, baik besar maupun kecil, dan bergabunglah dengan komunitas Storytell. Mulailah menceritakan kisah Anda hari ini.</string>
+    <string name="welcome_landing">Selamat Datang di Storytell</string>
+    <string name="capture">Ambil Gambar</string>
+    <string name="flip_camera">Putar Kamera</string>
+    <string name="upload">Unggah</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Kamera</string>
+    <string name="empty_image_warning">Tolong masukkan gambar terlebih dahulu</string>
+    <string name="story_image">Gambar story</string>
+    <string name="add_story">Tambah story</string>
+    <string name="write_your_story_here">Tulis ceritamu disini...</string>
+    <string name="image_preview">pratinjau gambar</string>
+    <string name="email_example">contoh@email.com</string>
+    <string name="example">contoh</string>
+    <string name="maps">Peta</string>
+    <string name="retry">Coba Lagi</string>
+</resources>

@@ -9,7 +9,6 @@ import com.dzakyadlh.storytell.data.repository.StoryRepository
 import com.dzakyadlh.storytell.data.response.ListStoryItem
 
 class HomeViewModel(private val storyRepository: StoryRepository) : ViewModel() {
-//    fun getAllStory() = storyRepository.getAllStory()
 
     val getAllStory: LiveData<PagingData<ListStoryItem>> = storyRepository.getAllStory()
         .cachedIn(viewModelScope)
