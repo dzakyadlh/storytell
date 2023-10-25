@@ -42,18 +42,6 @@ class StoryRepository private constructor(
         }
     }
 
-//    fun getAllStory(): LiveData<Result<List<ListStoryItem>>> = liveData {
-//        emit(Result.Loading)
-//        try {
-//            val successResponse = apiService.getAllStory()
-//            emit(Result.Success(successResponse.listStory))
-//        } catch (e: HttpException) {
-//            val errorBody = e.response()?.errorBody()?.string()
-//            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-//            emit(Result.Error(errorResponse.message.toString()))
-//        }
-//    }
-
     fun getAllStory(): LiveData<PagingData<ListStoryItem>> {
         return Pager(
             config =  PagingConfig(
