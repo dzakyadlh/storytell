@@ -10,7 +10,8 @@ object DataDummy {
                 i.toString(),
                 "created at: + $i",
                 "name: $i",
-                "description: $i"
+                "description: $i",
+                id = "id: $i",
             )
             items.add(story)
         }
