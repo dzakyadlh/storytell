@@ -4,6 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -22,8 +23,12 @@ import com.dzakyadlh.storytell.ui.home.HomeActivity
 import com.dzakyadlh.storytell.utils.getImageUri
 import com.dzakyadlh.storytell.utils.reduceFileImage
 import com.dzakyadlh.storytell.utils.uriToFile
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 
-class NewStoryActivity : AppCompatActivity() {
+class NewStoryActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityNewStoryBinding
 
@@ -32,6 +37,12 @@ class NewStoryActivity : AppCompatActivity() {
     private val viewModel by viewModels<NewStoryViewModel> {
         StoryViewModelFactory.getInstance(this)
     }
+
+    private lateinit var mMap: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private var currentLat: Double? = null
+    private var currentLon: Double? = null
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -64,7 +75,16 @@ class NewStoryActivity : AppCompatActivity() {
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
         binding.uploadButton.setOnClickListener { uploadImage() }
+        binding.materialSwitch.setOnClickListener {
+            val isLocationChecked = binding.materialSwitch.isChecked
+            if (isLocationChecked) getMyLocation()
+            else {
+                currentLat = null
+                currentLon = null
+            }
+        }
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun startGallery() {
@@ -107,7 +127,7 @@ class NewStoryActivity : AppCompatActivity() {
             val imageFile = uriToFile(uri, this).reduceFileImage()
             Log.d("Image File", "showImage: ${imageFile.path}")
             val description = binding.descEditText.text.toString()
-            viewModel.newStory(imageFile, description).observe(this) { result ->
+            viewModel.newStory(imageFile, description, currentLat, currentLon).observe(this) { result ->
                 if (result != null) {
                     when (result) {
                         is Result.Loading -> {
@@ -162,5 +182,28 @@ class NewStoryActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUIRED_PERMISSION = android.Manifest.permission.CAMERA
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        getMyLocation()
+    }
+
+    private fun getMyLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    currentLat = location.latitude
+                    currentLon = location.longitude
+                } else {
+                    showToast("Location is not found. Try again")
+                }
+            }
+        }
     }
 }

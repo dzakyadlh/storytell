@@ -26,24 +26,32 @@ class StoryRepository private constructor(
     private val storyDatabase: StoryDatabase,
     private val apiService: APIService,
 ) {
-    fun newStory(imageFile: File, description: String) = liveData {
-        emit(Result.Loading)
-        val requestBody = description.toRequestBody("text/plain".toMediaType())
-        val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-        val multipartBody = MultipartBody.Part.createFormData(
-            "photo",
-            imageFile.name,
-            requestImageFile
-        )
-        try {
-            val successResponse = apiService.newStory(multipartBody, requestBody)
-            emit(Result.Success(successResponse))
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-            emit(Result.Error(errorResponse.message.toString()))
+    fun newStory(imageFile: File, description: String, lat: Double? = null, lon: Double? = null) =
+        liveData {
+            emit(Result.Loading)
+            val requestBodyDescription = description.toRequestBody("text/plain".toMediaType())
+            val requestBodyLat = lat.toString().toRequestBody("text/plain".toMediaType())
+            val requestBodyLon = lon.toString().toRequestBody("text/plain".toMediaType())
+            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+            val multipartBody = MultipartBody.Part.createFormData(
+                "photo",
+                imageFile.name,
+                requestImageFile
+            )
+            try {
+                val successResponse = apiService.newStory(
+                    multipartBody,
+                    requestBodyDescription,
+                    requestBodyLat,
+                    requestBodyLon
+                )
+                emit(Result.Success(successResponse))
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                emit(Result.Error(errorResponse.message.toString()))
+            }
         }
-    }
 
     fun getAllStory(): LiveData<PagingData<ListStoryItem>> {
         @OptIn(ExperimentalPagingApi::class)
