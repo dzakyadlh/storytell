@@ -25,4 +25,5 @@
     <string name="title_activity_maps" translatable="false">MapsActivity</string>
     <string name="maps">Maps</string>
     <string name="retry">Retry</string>
+    <string name="include_current_location">Include current location</string>
 </resources>
