@@ -30,10 +30,6 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
         init()
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-    }
-
     private fun init() {
 
         addTextChangedListener(object : TextWatcher {
